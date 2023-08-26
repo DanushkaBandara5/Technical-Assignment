@@ -12,9 +12,9 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 public class AuthRequest {
     @NotNull @Length(min = 3 )
-    private String UserName;
+    private String userName;
     @NotNull
-     @Length(min = 5,max = 15)
+     @Length(min = 3,max = 15)
     private String password;
 
 }

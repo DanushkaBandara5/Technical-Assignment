@@ -21,15 +21,16 @@ public class User  implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    @Column(nullable = false,length = 2000)
+    @Column(nullable = false,length = 2000,name = "user_name")
     @NotNull @Length(min = 5,max = 200)
     private String userName;
     @Column(nullable = false,length = 200)
     @NotNull @Length(min=5,max = 200)
     private String password;
+
     public User(String userName,String password){
         this.userName=userName;
-        this.password=getPassword();
+        this.password=password;
     }
 
     @Override

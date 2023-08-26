@@ -6,17 +6,17 @@ import lk.ijse.dep10.auth.entity.User;
 import lk.ijse.dep10.auth.entity.UserLoginDetails;
 import lk.ijse.dep10.auth.jwt.JwtTokenUtility;
 import lk.ijse.dep10.auth.repository.UserLoginDetailsRepository;
+import lk.ijse.dep10.auth.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.time.LocalDateTime;
@@ -25,13 +25,17 @@ import java.time.format.DateTimeFormatter;
 @RestController
 public class AuthApi {
     @Autowired
+    private PasswordEncoder passwordEncoder;
+    @Autowired
     private AuthenticationManager authManager;
     @Autowired
     private JwtTokenUtility jwtTokenUtility;
     @Autowired
     private UserLoginDetailsRepository userLoginDetails;
-
-    @PostMapping("/auth/log")
+    @Autowired
+    private UserRepository userRepository;
+@ResponseStatus(HttpStatus.OK)
+    @PostMapping("/auth/login")
     public ResponseEntity<?> login(@RequestBody @Valid AuthRequest request) {
         System.out.println("hello");
         try {
@@ -53,6 +57,20 @@ public class AuthApi {
         } catch (BadCredentialsException ex) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
+    }
+    @ResponseStatus(HttpStatus.CREATED)
+    @PostMapping(value = "/auth/signup",consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> signup(@RequestBody @Valid AuthRequest request){
+        String password = passwordEncoder.encode(request.getPassword());
+
+        User user = new User(request.getUserName(), password);
+        if(userRepository.findByUserName(request.getUserName()).isPresent()){
+
+           return new ResponseEntity<>("Username Already Exist",HttpStatus.CONFLICT);
+        }
+        userRepository.save(user);
+        return new ResponseEntity<>(HttpStatus.CREATED);
+
     }
 
 

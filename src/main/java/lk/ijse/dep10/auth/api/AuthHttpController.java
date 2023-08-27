@@ -20,10 +20,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 @RestController
-public class AuthApi {
+public class AuthHttpController {
     @Autowired
     private PasswordEncoder passwordEncoder;
     @Autowired
@@ -35,7 +34,7 @@ public class AuthApi {
     @Autowired
     private UserRepository userRepository;
 @ResponseStatus(HttpStatus.OK)
-    @PostMapping("/auth/login")
+    @PostMapping("/api/v1/auth/login")
     public ResponseEntity<?> login(@RequestBody @Valid AuthRequest request) {
         System.out.println("hello");
         try {
@@ -59,7 +58,7 @@ public class AuthApi {
         }
     }
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping(value = "/auth/signup",consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/api/v1/auth/signup",consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> signup(@RequestBody @Valid AuthRequest request){
         String password = passwordEncoder.encode(request.getPassword());
 

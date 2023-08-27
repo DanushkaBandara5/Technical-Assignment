@@ -11,10 +11,10 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AuthRequest {
-    @NotNull @Length(min = 3 )
+    @NotNull(message = "UserName cannot be empty") @Length(min = 3,message = "UserName length must be greater than 3" )
     private String userName;
-    @NotNull
-     @Length(min = 3,max = 15)
+    @NotNull(message = "password cannot be empty")
+     @Length(min = 5,message = "password length must be greater than 5")
     private String password;
 
 }

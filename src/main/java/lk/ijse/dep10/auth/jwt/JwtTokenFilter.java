@@ -37,7 +37,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         setAuthenticationContext(token, request);
         filterChain.doFilter(request, response);
     }
-
+    //check the Authorization header in the request
     private boolean hasAuthorizationBearer(HttpServletRequest request) {
         String header = request.getHeader("Authorization");
         if (ObjectUtils.isEmpty(header) || !header.startsWith("Bearer")) {
@@ -46,7 +46,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
         return true;
     }
-
+    //get the jwt token from the request
     private String getAccessToken(HttpServletRequest request) {
         String header = request.getHeader("Authorization");
         String token = header.split(" ")[1].trim();

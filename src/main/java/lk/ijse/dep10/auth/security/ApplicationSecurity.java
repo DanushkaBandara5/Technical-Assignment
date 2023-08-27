@@ -29,10 +29,15 @@ public class ApplicationSecurity extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+//        http.authorizeRequests().anyRequest().permitAll();
 
         http.authorizeRequests()
-                .antMatchers("/auth/login").permitAll().antMatchers("/auth/signup").permitAll()
+                .antMatchers("/api/v1/auth/login","/api/v1/auth/signup", "/v3/api-docs/**",
+                        "/swagger-ui/**",
+                        "/v2/api-docs/**",
+                        "/swagger-resources/**").permitAll()
                 .anyRequest().authenticated();
+
         http.exceptionHandling()
                 .authenticationEntryPoint(
                         (request, response, ex) -> {
